@@ -1,4 +1,4 @@
-name: Build
+name: SonarCloud
 on:
   push:
     branches:
@@ -7,7 +7,7 @@ on:
     types: [opened, synchronize, reopened]
 jobs:
   build:
-    name: Build
+    name: Build and analyze
     runs-on: windows-latest
     steps:
       - name: Set up JDK 11
@@ -36,27 +36,6 @@ jobs:
         run: |
           New-Item -Path .\.sonar\scanner -ItemType Directory
           dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
-      - name: Setup Nuget
-        uses: Nuget/setup-nuget@v1.0.5
-        with:
-                    dotnet-version: 6.0.x
-      - name: Install .NET Core
-        uses: actions/setup-dotnet@v1.9.0
-        with:
-          dotnet-version: 6.0.x
-
-      - name: Restore nuget packages
-        run: nuget restore Test1/ElCaminoDeCostaRica/ElCaminoDeCostaRIca.sln
-
-      - name: Add msbuild to Test1/ElCaminoDeCostaRica/ElCaminoDeCostaRIca.csproj
-        uses: microsoft/setup-msbuild@v1.0.2
-
-      - name: Save state
-        run: echo "{name}={value}" >> $GITHUB_STATE 
-
-      - name: Set output
-        run: echo "{name}={value}" >> $GITHUB_OUTPUT
-
       - name: Build and analyze
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
@@ -64,6 +43,5 @@ jobs:
         shell: powershell
         run: |
           .\.sonar\scanner\dotnet-sonarscanner begin /k:"Cesar-Lop32_CaminoDeCR" /o:"cesar-lop32-1" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
-            dotnet build
+            dotnet build 
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
-          
