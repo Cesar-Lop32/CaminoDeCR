@@ -39,10 +39,15 @@ jobs:
       - name: Build and analyze
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any CaminoDeCR\Test1\ElCaminoDeCostaRica\ElCaminoDeCostaRIca.csproj
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}     
         shell: powershell
         run: |
-         ..sonar\scanner\dotnet-sonarscanner begin /k:"Cesar-Lop32_CaminoDeCR" /o:"cesar-lop32-1" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
-          dotnet build 
-          ..sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
-          
+        SonarScanner.MSBuild.exe begin /k:"Cesar-Lop32_CaminoDeCR" /d:sonar.login="<sonar-token>" 
+        dotnet build --no-incremental
+        dotnet test --collect "Code Coverage"
+        SonarScanner.MSBuild.exe end /d:sonar.login="<sonar-token>"
+
+
+    #  ..sonar\scanner\dotnet-sonarscanner begin /k:"Cesar-Lop32_CaminoDeCR" /o:"cesar-lop32-1" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
+    #   dotnet build 
+    #   ..sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
