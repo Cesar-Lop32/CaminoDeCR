@@ -42,6 +42,6 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: powershell
         run: |
-         .\.sonar\scanner\dotnet-sonarscanner begin /k:"Cesar-Lop32_CamidoDeCR" /o:"cesar-lop32-1" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
+         .\.sonar\scanner\dotnet-sonarscanner begin /k:"Cesar-Lop32_CaminoDeCR" /o:"cesar-lop32-1" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
           dotnetbuild
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
